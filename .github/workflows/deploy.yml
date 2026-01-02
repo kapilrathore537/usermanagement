@@ -46,6 +46,7 @@ jobs:
           username: ec2-user
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
+            docker image rm -f kapilrathore123/spring-web-app:latest || true
             docker pull kapilrathore123/spring-web-app:latest
             docker compose down
             docker compose up -d
