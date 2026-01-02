@@ -1,0 +1,92 @@
+# Docker Compose file version
+# Defines the syntax version used by docker-compose
+version: "3.8"
+
+# All containers (services) are defined here
+services:
+
+  # =========================
+  # MySQL DATABASE CONTAINER
+  # =========================
+  mysql-db:
+    # Use official MySQL image (version 8.4)
+    image: mysql:8.4
+
+    # Fixed container name (easier to refer & debug)
+    container_name: mysql-db
+
+    # Always restart if container crashes or system reboots
+    restart: always
+
+    # Environment variables used ONLY on FIRST startup
+    # These create DB, user, and passwords automatically
+    environment:
+      # Database name that will be created
+      MYSQL_DATABASE: testdb
+
+      # Non-root database user (recommended for apps)
+      MYSQL_USER: appuser
+
+      # Password for the app user
+      MYSQL_PASSWORD: apppass
+
+      # Root password (used only for admin access)
+      MYSQL_ROOT_PASSWORD: root
+
+    # Port mapping: Host → Container
+    # Allows MySQL Workbench / CLI to connect from host machine
+    ports:
+      - "3306:3306"   # localhost:3307 → mysql-db:3306
+
+    # Volume for persistent data
+    # Prevents data loss when container restarts
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+
+  # =========================
+  # SPRING BOOT APPLICATION
+  # =========================
+  spring-app:
+    # Build image using Dockerfile in current directory
+    build: .
+
+    # Fixed container name
+    container_name: spring-app
+
+    # Restart automatically on failure
+    restart: always
+
+    # Ensures MySQL container starts BEFORE the app
+    # (does NOT wait until DB is fully ready)
+    depends_on:
+      - mysql-db
+
+    # Port mapping for Spring Boot
+    # Access app via browser on localhost:8080
+    ports:
+      - "8080:8080"
+
+    # Environment variables override application.yml
+    # Used by Spring Boot at runtime
+    environment:
+      # JDBC URL using Docker service name as hostname
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/testdb
+
+      # Database username (matches MYSQL_USER)
+      SPRING_DATASOURCE_USERNAME: appuser
+
+      # Database password (matches MYSQL_PASSWORD)
+      SPRING_DATASOURCE_PASSWORD: apppass
+
+      # Hibernate auto schema update (dev only)
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+
+
+# =========================
+# NAMED VOLUMES
+# =========================
+volumes:
+  # Stores MySQL data outside the container filesystem
+  # Keeps DB data even if container is deleted
+  mysql_data:
