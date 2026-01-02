@@ -18,7 +18,7 @@ spring:
     # For Docker: jdbc:mysql://mysql-db:3306/testdb
     url: jdbc:mysql://mysql-db:3306/testdb
    
-
+ 
     # Database username
     # Must match MYSQL_USER in docker-compose.yml or your MySQL user
     username: appuser
