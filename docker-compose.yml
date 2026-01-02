@@ -49,7 +49,7 @@ services:
   # =========================
   spring-app:
     # Build image using Dockerfile in current directory
-    build: .
+    image : kapilrathore123/spring-web-app:latest
 
     # Fixed container name
     container_name: spring-app
