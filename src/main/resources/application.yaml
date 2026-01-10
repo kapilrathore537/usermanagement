@@ -4,33 +4,23 @@
 
 spring:
 
-
+  # -------------------------
+  # THYMELEAF CONFIG
+  # -------------------------
   thymeleaf:
     cache: false
+
   # -------------------------
   # DATABASE CONFIGURATION
   # -------------------------
   datasource:
-
-    # JDBC URL to connect to MySQL
-    # For AWS EC2, replace 'mysql-db' with your EC2 instance IP or hostname
-    # Example: jdbc:mysql://your-ec2-ip:3306/testdb
-    # For Docker: jdbc:mysql://mysql-db:3306/testdb
-    url: jdbc:mysql://mysql-db:3306/testdb
-   
- 
-    # Database username
-    # Must match MYSQL_USER in docker-compose.yml or your MySQL user
-    username: appuser
-
-    # Database password
-    # Must match MYSQL_PASSWORD in docker-compose.yml or your MySQL password
-    password: apppass
-
-    # MySQL JDBC driver class
+    # Values come from environment variables (Docker / EC2)
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
-    # Connection pool settings for better performance
+    # Connection pool (HikariCP)
     hikari:
       maximum-pool-size: 20
       minimum-idle: 5
@@ -40,42 +30,32 @@ spring:
       leak-detection-threshold: 60000
 
   # -------------------------
-  # JPA / HIBERNATE SETTINGS
+  # JPA / HIBERNATE
   # -------------------------
   jpa:
-
-    # Hibernate DDL strategy
-    # update = create tables if missing, update schema automatically
-    # (Good for development, NOT recommended for production)
     hibernate:
-      ddl-auto: update
+      ddl-auto: update   # OK for now (change to validate in real prod)
 
-    # Show SQL queries in application logs
     show-sql: true
 
-    # Format SQL queries for better readability
     properties:
       hibernate:
         format_sql: true
         dialect: org.hibernate.dialect.MySQLDialect
 
-    # Disable Open Session in View
-    # Prevents lazy loading issues during view rendering
-    # Recommended best practice
     open-in-view: false
 
 # -------------------------
-# SERVER CONFIGURATION
+# SERVER CONFIG
 # -------------------------
 server:
   port: 8080
 
 # -------------------------
-# LOGGING CONFIGURATION
+# LOGGING
 # -------------------------
 logging:
   level:
     com.demo: DEBUG
-    org.springframework.web: DEBUG
+    org.springframework.web: INFO
     org.hibernate.SQL: DEBUG
-    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
