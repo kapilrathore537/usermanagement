@@ -26,12 +26,12 @@ spring:
       minimum-idle: 5
       connection-timeout: 30000
       idle-timeout: 600000
-      max-lifetime: 1800000
+      max-lifetime: 1800000 
       leak-detection-threshold: 60000
 
   # -------------------------
   # JPA / HIBERNATE
-  # ------------------------- 
+  # -------------------------   
   jpa:
     hibernate:
       ddl-auto: update   # OK for now (change to validate in real prod)
