@@ -31,7 +31,7 @@ spring:
 
   # -------------------------
   # JPA / HIBERNATE
-  # -------------------------
+  # ------------------------- 
   jpa:
     hibernate:
       ddl-auto: update   # OK for now (change to validate in real prod)
