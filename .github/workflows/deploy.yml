@@ -48,5 +48,5 @@ jobs:
           script: |
             docker image rm -f kapilrathore123/spring-web-app:latest || true
             docker pull kapilrathore123/spring-web-app:latest
-            docker compose down
+            docker compose down 
             docker compose up -d
